@@ -58,4 +58,4 @@ jobs:
 
       - name: Output the report url
         run: |
-          echo "Allure Report is available at https://mkun.github.io/allure-to-pages-poc/allure-report-${{ github.run_number }}/"
+          echo "Allure Report is available at https://matekn.github.io/allure-to-pages-poc/allure-report-${{ github.run_number }}/"
