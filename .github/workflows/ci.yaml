@@ -45,7 +45,7 @@ jobs:
           allure_history: allure-history
           allure_results: allure-results
           allure_report: allure-report-${{ github.run_number }}
-          clean: false
+          clean: true
 
       # Deploy to GitHub Pages
       - name: Publish test report
@@ -55,6 +55,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: allure-report-${{ github.run_number }}
+          commit_message: "Deploy Allure report for run ${{ github.run_number }}"
 
       - name: Output the report url
         run: |
