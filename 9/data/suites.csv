@@ -1,7 +1,0 @@
-"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"passed","Sun Nov 17 08:56:06 GMT 2024","Sun Nov 17 08:56:06 GMT 2024","0","","Addition Function","","Addition Function","should add negative numbers","should add negative numbers",""
-"passed","Sun Nov 17 08:56:06 GMT 2024","Sun Nov 17 08:56:06 GMT 2024","0","","Subtracting Function","","Subtracting Function","should subtract two positive numbers","should subtract two positive numbers",""
-"passed","Sun Nov 17 08:56:06 GMT 2024","Sun Nov 17 08:56:06 GMT 2024","0","","Subtracting Function","","Subtracting Function","should handle subtract zero","should handle subtract zero",""
-"passed","Sun Nov 17 08:56:06 GMT 2024","Sun Nov 17 08:56:06 GMT 2024","0","","Subtracting Function","","Subtracting Function","should subtract negative numbers","should subtract negative numbers",""
-"passed","Sun Nov 17 08:56:06 GMT 2024","Sun Nov 17 08:56:06 GMT 2024","0","","Addition Function","","Addition Function","should handle adding zero","should handle adding zero",""
-"passed","Sun Nov 17 08:56:06 GMT 2024","Sun Nov 17 08:56:06 GMT 2024","1","","Addition Function","","Addition Function","should add two positive numbers","should add two positive numbers",""
