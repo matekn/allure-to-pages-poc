@@ -55,3 +55,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: allure-report-${{ github.run_number }}
+
+      - name: Output the report url
+        run: |
+          echo "Allure Report is available at https://mkun.github.io/allure-to-pages-poc/allure-report-${{ github.run_number }}/"
