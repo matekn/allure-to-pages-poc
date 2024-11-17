@@ -1,0 +1,45 @@
+name: Build, Test, and Deploy Allure Report
+
+on:
+  pull-request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  test-and-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout repository
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      # Install dependencies
+      - name: Install Dependencies
+        run: npm install
+
+      # Run tests and generate Allure results
+      - name: Run Tests
+        run: npm test
+
+      # Generate Allure Report
+      - name: Generate Allure Report
+        run: |
+          npx allure generate allure-results --clean -o allure-report
+
+      # Deploy to GitHub Pages
+      - name: Deploy Allure Report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report
+          keep_files: true
