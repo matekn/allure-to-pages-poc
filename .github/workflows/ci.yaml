@@ -44,7 +44,9 @@ jobs:
           allure_history: allure-history
           allure_results: allure-results
           allure_report: allure-report-${{ github.run_number }}
-
+      - name: list all files in the directory
+        shell: bash
+        run: ls -R
       - name: uplad allure report to artifactory
         id: deployment
         uses: actions/upload-pages-artifact@v3
