@@ -97,10 +97,12 @@ jobs:
           else
             echo '{"reports": []}' > reports.json
           fi
-
-          new_report="allure-report-${{ github.run_number }}"
+          
+          new_report="allure-report-36"
+          
+          # Ensure that the URL is treated as a string with proper escaping
           jq --arg new_report "https://$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/$new_report/" \
-             '.reports += [$new_report]' reports.json > temp.json && mv temp.json reports.json
+            '.reports += [$new_report]' reports.json > temp.json && mv temp.json reports.json
 
       - name: Upload reports.json as artifact
         run: |
