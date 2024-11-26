@@ -47,11 +47,16 @@ jobs:
       - name: list all files in the directory
         shell: bash
         run: ls -R
+      - name: Fix permissions
+        run: |
+          chmod -c -R +rX "_site/" | while read line; do
+            echo "::warning title=Invalid file permissions automatically fixed::$line"
+          done
       - name: uplad allure report to artifactory
         id: deployment
         uses: actions/upload-pages-artifact@v3
         with:
-          ./allure-report-${{ github.run_number }}
+          path: ./allure-report-${{ github.run_number }}
    # Deployment job
   deploy:
     environment:
