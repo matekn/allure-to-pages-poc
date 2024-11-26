@@ -62,7 +62,7 @@ jobs:
   deploy:
     environment:
       name: upload-to-pages
-      url: ${{ steps.deployment.outputs.page_url }}/allure-report-${{github.run_number}}
+      url: ${{ steps.deployment.outputs.page_url }}allure-report-${{github.run_number}}
     runs-on: ubuntu-latest
     permissions:
       id-token: write
