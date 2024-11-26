@@ -84,7 +84,7 @@ jobs:
           fi
 
           new_report="allure-report-${{ github.run_number }}"
-          jq --arg new_report "https://$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/raw/main/$new_report/index.html" \
+          jq --arg new_report "https://$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/$new_report/" \
              '.reports += [$new_report]' reports.json > temp.json && mv temp.json reports.json
 
       - name: Upload updated JSON file
