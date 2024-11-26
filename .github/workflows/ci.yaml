@@ -41,22 +41,36 @@ jobs:
         uses: simple-elf/allure-report-action@v1.7
         if: always()
         with:
-          gh_pages: gh-pages
           allure_history: allure-history
           allure_results: allure-results
-          allure_report: allure-report-${{ github.run_number }}
-          clean: true
-
-      # Deploy to GitHub Pages
-      - name: Publish test report
-        uses: peaceiris/actions-gh-pages@v3
-        if: always()
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: allure-report-${{ github.run_number }}
-          commit_message: "Deploy Allure report for run ${{ github.run_number }}"
-
-      - name: Output the report url
+          allure_report: allure-report/allure-report-${{ github.run_number }}
+      - name: list all files in the directory
+        shell: bash
+        run: ls -R
+      - name: Fix permissions
         run: |
-          echo "Allure Report is available at https://matekn.github.io/allure-to-pages-poc/allure-report-${{ github.run_number }}/"
+          chmod -c -R +rX "_site/" | while read line; do
+            echo "::warning title=Invalid file permissions automatically fixed::$line"
+          done
+      - name: uplad allure report to artifactory
+        id: deployment
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: allure-report/
+          name: allure-report-${{github.run_number}}
+   # Deployment job  
+  deploy:
+    environment:
+      name: upload-to-pages
+      url: ${{ steps.deployment.outputs.page_url }}allure-report-${{github.run_number}}
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      pages: write
+    needs: test-and-report
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: allure-report-${{github.run_number}}
