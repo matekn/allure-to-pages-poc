@@ -74,7 +74,11 @@ jobs:
         uses: actions/deploy-pages@v4
         with:
           artifact_name: allure-report-${{github.run_number}}
-  
+      - name: download previous reports.json artifact if exists 
+        uses: actions/download-artifact@v3
+        with:
+          name: reports-json
+          path: .
       - name: Update JSON file with new report link
         run: |
           if [ -f "reports.json" ]; then
