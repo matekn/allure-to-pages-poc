@@ -48,7 +48,6 @@ jobs:
         shell: bash
         run: |
          ls -R
-         cat reports.json
       - name: Fix permissions
         run: |
           chmod -c -R +rX "_site/" | while read line; do
@@ -90,7 +89,9 @@ jobs:
               "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{env.artifact_id}}/zip"
       - name: list all files in the directory
         shell: bash
-        run: ls -R
+        run: |
+         ls -R
+         cat reports.json
 
       - name: Update JSON file with new report link
         run: |
