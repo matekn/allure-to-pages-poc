@@ -74,3 +74,43 @@ jobs:
         uses: actions/deploy-pages@v4
         with:
           artifact_name: allure-report-${{github.run_number}}
+  
+  deploy-dashboard-page:
+    environment:
+      name: upload-to-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      pages: write
+    needs: [test-and-report, deploy]
+    steps:
+      - name: Download existing Pages content
+        uses: actions/download-pages-artifact@v2
+        with:
+          path: pages-content
+          name: pages-content-${{github.run_number}}
+
+      # 2. Dinamikus Dashboard generálása
+      - name: Generate Dashboard
+        run: |
+          echo "<html><head><title>Allure Dashboard</title></head><body>" > pages-content/index.html
+          echo "<h1>Allure Reports</h1>" >> pages-content/index.html
+          for report in $(ls pages-content/allure-report-*); do
+            report_name=$(basename $report)
+            echo "<a href='/$report_name/'>${report_name}</a><br>" >> pages-content/index.html
+          done
+          echo "</body></html>" >> pages-content/index.html
+
+      # 3. Feltöltés az új dashboarddal
+      - name: Upload Dashboard and Allure Reports
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: pages-content/
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: pages-content-${{github.run_number}}
+
+    
