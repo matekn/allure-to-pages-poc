@@ -43,7 +43,7 @@ jobs:
         with:
           allure_history: allure-history
           allure_results: allure-results
-          allure_report: allure-report-${{ github.run_number }}
+          allure_report: allure-report/allure-report-${{ github.run_number }}
       - name: list all files in the directory
         shell: bash
         run: |
@@ -57,7 +57,7 @@ jobs:
         id: deployment
         uses: actions/upload-pages-artifact@v3
         with:
-          path: allure-report-${{ github.run_number }}
+          path: allure-report/allure-report-${{github.run_number}}
           name: allure-report-${{github.run_number}}
    # Deployment job  
   deploy:
@@ -75,51 +75,4 @@ jobs:
         uses: actions/deploy-pages@v4
         with:
           artifact_name: allure-report-${{github.run_number}}
-      - name: Get artifact ID
-        id: artifact_info
-        run: |
-            artifact_id=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-              "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" | \
-              jq -r '.artifacts[0].id')
-            echo "artifact_id=$artifact_id" >> $GITHUB_ENV
-      - name: Download reports.json using GitHub API
-        run: |
-            curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-              -o artifact.zip \
-              "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{env.artifact_id}}/zip"
-      - name: Extract the ZIP file
-        run: unzip artifact.zip -d extracted_artifacts/
-      - name: list all files in the directory
-        shell: bash
-        run: |
-         ls -R
-      - name: Access reports.json
-        run: |
-           # Assuming `reports.json` is located inside `extracted_artifacts/`
-           if [ -f "extracted_artifacts/reports.json" ]; then
-             cp extracted_artifacts/reports.json .
-           else
-             echo "reports.json not found inside the artifact."
-           fi
-      - name: Update JSON file with new report link
-        run: |
-          if [ -f "reports.json" ]; then
-            cp reports.json reports.json.bak
-          else
-            echo '{"reports": []}' > reports.json
-          fi
-          
-          new_report="allure-report-36"
-          
-          # Ensure that the URL is treated as a string with proper escaping
-          jq --arg new_report "https://$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/$new_report/" \
-            '.reports += [$new_report]' reports.json > temp.json && mv temp.json reports.json
-
-      - name: Upload reports.json as artifact
-        run: |
-               curl -X POST \
-               -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-               -H "Accept: application/vnd.github+json" \
-               -H "Content-Type: application/json" \
-               --data-binary @reports.json \
-               "https://api.github.com/repos/${{ github.repository }}/actions/artifacts"
+     
