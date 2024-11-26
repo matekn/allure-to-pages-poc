@@ -74,18 +74,22 @@ jobs:
         uses: actions/deploy-pages@v4
         with:
           artifact_name: allure-report-${{github.run_number}}
-          
-      - name: Download reports.json using GitHub API
+      - name: Get artifact ID
+        id: artifact_info
         run: |
-            # Get the latest artifact ID from the GitHub API
             artifact_id=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
               "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" | \
               jq -r '.artifacts[0].id')
-  
-            # Download the artifact containing reports.json
+            echo "artifact_id=$artifact_id" >> $GITHUB_ENV
+      - name: Download reports.json using GitHub API
+        run: |
             curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
               -o reports.json \
-              "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${artifact_id}/zip"
+              "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{env.artifact_id}}/zip"
+      - name: list all files in the directory
+        shell: bash
+        run: ls -R
+
       - name: Update JSON file with new report link
         run: |
           if [ -f "reports.json" ]; then
