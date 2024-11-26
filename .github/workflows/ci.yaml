@@ -56,7 +56,7 @@ jobs:
         id: deployment
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./allure-report-${{ github.run_number }}
+          path: allure-report-${{ github.run_number }}/
    # Deployment job
   deploy:
     environment:
