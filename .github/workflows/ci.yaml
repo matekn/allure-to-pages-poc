@@ -57,6 +57,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: allure-report/
+          name: allure-report-${{github.run_number}}
    # Deployment job 
   deploy:
     environment:
@@ -72,5 +73,5 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
         with:
-          artifact_name: allure-report
+          artifact_name: allure-report-${{github.run_number}}
           destination_folder: allure-report-${{ github.run_number }}
