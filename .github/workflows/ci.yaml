@@ -43,7 +43,7 @@ jobs:
         with:
           allure_history: allure-history
           allure_results: allure-results
-          allure_report: allure-report/allure-report-${{ github.run_number }}
+          allure_report: allure-report-${{ github.run_number }}
       - name: list all files in the directory
         shell: bash
         run: |
@@ -57,7 +57,7 @@ jobs:
         id: deployment
         uses: actions/upload-pages-artifact@v3
         with:
-          path: allure-report/allure-report-${{ github.run_number }}
+          path: allure-report-${{ github.run_number }}
           name: allure-report-${{github.run_number}}
    # Deployment job  
   deploy:
