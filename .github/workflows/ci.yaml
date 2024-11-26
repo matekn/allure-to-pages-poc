@@ -85,14 +85,22 @@ jobs:
       - name: Download reports.json using GitHub API
         run: |
             curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-              -o reports.json \
+              -o artifact.zip \
               "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{env.artifact_id}}/zip"
+      - name: Extract the ZIP file
+        run: unzip artifact.zip -d extracted_artifacts/
       - name: list all files in the directory
         shell: bash
         run: |
          ls -R
-         cat reports.json
-
+      - name: Access reports.json
+        run: |
+           # Assuming `reports.json` is located inside `extracted_artifacts/`
+           if [ -f "extracted_artifacts/reports.json" ]; then
+             cp extracted_artifacts/reports.json .
+           else
+             echo "reports.json not found inside the artifact."
+           fi
       - name: Update JSON file with new report link
         run: |
           if [ -f "reports.json" ]; then
