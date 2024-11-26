@@ -46,7 +46,9 @@ jobs:
           allure_report: allure-report/allure-report-${{ github.run_number }}
       - name: list all files in the directory
         shell: bash
-        run: ls -R
+        run: |
+         ls -R
+         cat reports.json
       - name: Fix permissions
         run: |
           chmod -c -R +rX "_site/" | while read line; do
