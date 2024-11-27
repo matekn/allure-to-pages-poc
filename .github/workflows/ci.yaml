@@ -62,7 +62,7 @@ jobs:
    # Deployment job  
   deploy:
     environment:
-      name: upload-to-pages
+      name: upload-to-pages-${{github.run_number}}
       url: ${{ steps.deployment.outputs.page_url }}allure-report-${{github.run_number}}
     runs-on: ubuntu-latest
     permissions:
