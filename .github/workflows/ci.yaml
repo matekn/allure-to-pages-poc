@@ -14,10 +14,14 @@ on:
   push:
     branches:
       - main
-  
+
 
 jobs:
   test-and-report:
+    permissions:
+      contents: write
+      id-token: write
+      
     runs-on: ubuntu-latest
 
     steps:
