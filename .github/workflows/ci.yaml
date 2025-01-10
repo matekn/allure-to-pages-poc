@@ -72,12 +72,12 @@ jobs:
         id: deployment
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: allure-history
           name: allure-reports
       - name: deploy to github pages
         uses: actions/deploy-pages@v4
         with:
-          artifact-name: page-content
+          artifact-name: allure-reports
       - name: Print page url
         run: |
           echo "page url is : ${{steps.deployment.outputs.page_url}}"
