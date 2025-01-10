@@ -54,16 +54,8 @@ jobs:
           gh_pages: gh-pages
           allure_history: allure-history
           allure_results: allure-results
+          allure-report: allure-report-${{github.run_id}}
 
-      
-      - name: Debug publish directory
-        run: ls -R gh-pages/allure-history || echo "Directory not found or empty"
-
-      # Clean and prepare gh-pages directory
-      - name: Clean up gh-pages directory
-        run: |
-          rm -rf gh-pages/*
-          mkdir -p gh-pages
       
       - name: Publish Allure report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
