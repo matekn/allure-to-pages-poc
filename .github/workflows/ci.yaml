@@ -64,11 +64,9 @@ jobs:
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: allure-history
   
-      - name: Checkout gh-pages branch for Artifactory upload
-        uses: actions/checkout@v3
-        with:
-          ref: gh-pages
-          path: .
+      - name: list files in directory
+        run: |
+          ls -R -la
 
       - name: upload allure report as pages artifact
         id: deployment
