@@ -64,5 +64,23 @@ jobs:
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: allure-history
   
+      - name: Checkout gh-pages branch for Artifactory upload
+        uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+          path: .
 
+      - name: upload allure report as pages artifact
+        id: deployment
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+          name: allure-reports
+      - name: deploy to github pages
+        uses: actions/deploy-pages@v4
+        with:
+          artifact-name: page-content
+      - name: Print page url
+        run: |
+          echo "page url is : ${{steps.deployment.outputs.page_url}}"
     
