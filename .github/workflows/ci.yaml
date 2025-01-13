@@ -67,5 +67,29 @@ jobs:
       - name: list files in directory
         run: |
           ls -R -la 
+  deploy:
+    permissions:
+      contents: write
+      id-token: write
+      pages: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Pages
+        uses: actions/checkout@v4
+      - name: list all files
+        run: |
+          ls -R -la
+      - name: Upload static files as artifact
+        id: deployment
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+          name: github-pages
+      - name: deploy to github pages
+        if: false
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages
+
 
    
