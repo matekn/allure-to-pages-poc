@@ -76,6 +76,8 @@ jobs:
     steps:
       - name: Checkout Pages
         uses: actions/checkout@v4
+        with:
+          ref: gh-pages
       - name: list all files
         run: |
           ls -R -la
