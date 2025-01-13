@@ -66,6 +66,6 @@ jobs:
   
       - name: list files in directory
         run: |
-          ls -R -la
+          ls -R -la 
 
    
