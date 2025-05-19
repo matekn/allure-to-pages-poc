@@ -6,6 +6,8 @@ permissions:
 
   
 on:
+  workflow_dispatch:
+
   pull_request:
     branches:
       - main
@@ -13,64 +15,84 @@ on:
     branches:
       - main
 
+
 jobs:
   test-and-report:
+    permissions:
+      contents: write
+      id-token: write
+      pages: write
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout repository
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '16'
 
-      # Install dependencies
       - name: Install Dependencies
         run: npm install
 
-      # Run tests and generate Allure results
       - name: Run Tests
         run: npm test
 
-      # Generate Allure Report
-      - name: Build test report
+      - name: Load test report history
+        uses: actions/checkout@v3
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Build Allure report
         uses: simple-elf/allure-report-action@v1.7
         if: always()
         with:
-          allure_history: allure-history
           allure_results: allure-results
-          allure_report: allure-report/allure-report-${{ github.run_number }}
-      - name: list all files in the directory
-        shell: bash
-        run: ls -R
-      - name: Fix permissions
+          #gh_pages: gh-pages
+          #allure_report: allure-report
+          allure_history: allure-history
+          keep_reports: 20
+      - name: Deploy report to Github Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          personal_token: ${{secrets.GITHUB_TOKEN}}
+          publish_branch: gh-pages
+          publish_dir: allure-history
+    
+  
+      - name: list files in directory
         run: |
-          chmod -c -R +rX "_site/" | while read line; do
-            echo "::warning title=Invalid file permissions automatically fixed::$line"
-          done
-      - name: uplad allure report to artifactory
+          ls -R -la 
+  deploy:
+    needs: test-and-report
+    permissions:
+      contents: write
+      id-token: write
+      pages: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Pages
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+      - name: list all files
+        run: |
+          ls -R -la
+      - name: Upload static files as artifact
         id: deployment
         uses: actions/upload-pages-artifact@v3
         with:
-          path: allure-report/
-          name: allure-report-${{github.run_number}}
-   # Deployment job  
-  deploy:
-    environment:
-      name: upload-to-pages
-      url: ${{ steps.deployment.outputs.page_url }}allure-report-${{github.run_number}}
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      pages: write
-    needs: test-and-report
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
+          path: .
+          name: github-pages
+      - name: deploy to github pages
         uses: actions/deploy-pages@v4
         with:
-          artifact_name: allure-report-${{github.run_number}}
+          artifact_name: github-pages
+
+
+   
